@@ -28,7 +28,37 @@ def insertion(arr):
                 break
         print(arr)
 
-# 3. Quick sort
-# start = 0, end = len(array)-1
-# array = [26, 25, 24, 9, 16, 37, 34, 59, 68]
+# 3. Quick sort O(n log n) || pivot 설정 실패에 따른 worst cast: O(N**2)
+# arr, start = 0, end = len(array)-1
+# 배열의 0번째 원소를 pivot 으로 지정 -> pivot의 바로 다음 원소를 left, 맨 마지막 원소(배열의 끝)를 right로 지정해서 left엔 pivot 보다 작은, right엔 큰 애들로 분리한다.
+# 만약 각 방향에서 이 규칙을 따르지 않는 원소를 찾게 되면 두 원소를 swap 시켜준다.
+# pivot 보다 작은 원소 큰 원소로 그룹이 나뉘였으면 pivot과 left 그룹의 가장 마지막 원소와 swap 한다.
+# 각 그룹에서 또 다시 가장 첫번째 원소를 pivot으로 지정하고 그룹마다 quick sort를 실행 시켜준다. 🔁
+array = [26, 25, 24, 9, 16, 37, 34, 59, 68]
 
+def quick(arr, start, end):
+    if start >= end:
+        return
+    pivot = start
+    left = start + 1
+    right = end
+    while left <= right:
+        # 피벗보다 큰 데이터를 찾을 때 까지 반복
+        while left <= end and arr[left] <= arr[pivot]:
+            left += 1
+        # 피벗보다 작은 데이터를 찾을 때 까지 반복
+        while right > start and arr[right] >= arr[pivot]:
+            right -= 1
+        # 서로 엇갈렸다면
+        if left > right:
+            print(left, right)
+            arr[right], arr[pivot] = arr[pivot], arr[right]
+        # 엇갈리지 않았다면 작은 데이터와 큰 데이터를 교체
+        else:
+            arr[left], arr[right] = arr[right], arr[left]
+    # 분할 이후 왼쪽 부분과 오른쪽 부분 각각에 대해 퀵 정렬 수행
+    print(arr)
+    quick(arr, start, right - 1)
+    quick(arr, right + 1, end)
+
+quick(array, 0, len(array) - 1)
