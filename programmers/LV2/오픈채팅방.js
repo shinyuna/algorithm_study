@@ -29,9 +29,6 @@ function solution(record) {
 
   return answer;
 }
-console.log(
-  solution(['Enter uid1234 Muzi', 'Enter uid4567 Prodo', 'Leave uid1234', 'Enter uid1234 Prodo', 'Change uid4567 Ryan'])
-);
 
 // 다른 분들의 풀이
 function solution1(record) {
@@ -77,3 +74,13 @@ function solution3(record) {
       return v[0] === 'Enter' ? nick[v[1]] + '님이 들어왔습니다.' : nick[v[1]] + '님이 나갔습니다.';
     });
 }
+
+console.log(
+  solution1([
+    'Enter uid1234 Muzi',
+    'Enter uid4567 Prodo',
+    'Leave uid1234',
+    'Enter uid1234 Prodo',
+    'Change uid4567 Ryan',
+  ])
+);
