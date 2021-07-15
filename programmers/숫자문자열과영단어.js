@@ -1,3 +1,8 @@
+/**
+ *
+ * @link https://programmers.co.kr/learn/courses/30/lessons/81301
+ */
+
 function solution(s) {
   if (!/[a-zA-Z]/.test(s)) {
     return +s;
