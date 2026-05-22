@@ -5,8 +5,6 @@ function solution(park, routes) {
     'W': [0, -1],
     'E': [0, 1],
   };
-  const parkMap = [];
-  
   let [currentX, currentY] = [0, 0];
 
   park.forEach((row, i) => {
@@ -16,29 +14,30 @@ function solution(park, routes) {
     if (startIndex !== -1) {
       [currentX, currentY] = [i, startIndex];
     }
-    
-    parkMap.push(mapRow);
   })
 
   for (const route of routes) {
     const [direction, distanceStr] = route.split(' ');
     const distance = parseInt(distanceStr, 10);
-    const [preX, preY] = [currentX, currentY];
+
+    let isSafe = true;
+    let [tempX, tempY] = [currentX, currentY];
 
     for (let i = 1; i <= distance; i++) {
       const [x, y] = directions[direction];
       
-      const nextX = currentX + x;
-      const nextY = currentY + y;
+      tempX += x;
+      tempY += y;
       
-      if (!parkMap[nextX] || !parkMap[nextX][nextY] || parkMap[nextX][nextY] === 'X') {
-        currentX = preX;
-        currentY = preY;
+      if (!park[tempX] || !park[tempX][tempY] || park[tempX][tempY] === 'X') {
+        isSafe = false;
         break;
       }
+    }
 
-      currentX = nextX;
-      currentY = nextY;
+    if (isSafe) {
+      currentX = tempX;
+      currentY = tempY;
     }
   }
 
