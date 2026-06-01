@@ -19,36 +19,44 @@ function solution(tasks, n) {
 
 /**
  * max heap을 이용한 풀이
+ * @url https://www.youtube.com/watch?v=s8p8ukTyA2I
+ * 
+ * 시간복잡도: O(n) - 작업 빈도수 계산
+ * 공간복잡도: O(1) - 고정된 크기의 배열과 큐 사용
  */
 function solution_2(tasks, n) {
-  /**
-   * 1. job별로 개수를 카운팅한다.
-   * 2. 가장 높은 count 의 job 순으로 maxHeap에 기록한다.
-   * 3. job 순서대로 n 간격만큼 job을 배치한다.
-   * 4. 총 job 길이를 반환한다.
-   * 
-  */
-  const jobMap = Array(26).fill(0);
-  const jobSchedules = [];
+  // 1. 작업 빈도수 계산 (Hash Map)
+  const counts = {};
 
-  for (const task of tasks) {
-    jobMap[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
+  for (let task of tasks) {
+    counts[task] = (counts[task] || 0) + 1;
   }
 
-  const jobCounts = jobMap.filter(job => job > 0).map((job, index) => {
-    return ({ count: job, index })
-  }).sort((a, b) => b.count - a.count);
+  // 2. 빈도수를 배열로 변환
+  let maxHeap = Object.values(counts);
+  let time = 0;
+  let queue = []; // [count, availableTime]
 
-  for (let i = 0; i < jobCounts.length; i++) {
-    for (let cnt = 0; cnt < jobCounts[i].count; cnt++) {
-      const spacing = i + (cnt * (n + 1));
-      const char = String.fromCharCode(jobCounts[i].index + 'A'.charCodeAt(0));
+  while (maxHeap.length > 0 || queue.length > 0) {
+    time++;
 
-      jobSchedules[spacing] = char;
+    // 힙에서 가장 빈도가 높은 작업 처리
+    if (maxHeap.length > 0) {
+      maxHeap.sort((a, b) => b - a); // 내림차순 정렬로 최대값 확보
+      let count = maxHeap.shift() - 1;
+
+      if (count > 0) {
+        queue.push([count, time + n]);
     }
   }
 
-  return jobSchedules.length;
+    // 큐에서 냉각 시간이 끝난 작업을 다시 힙으로 이동
+    if (queue.length > 0 && queue[0][1] === time) {
+      maxHeap.push(queue.shift()[0]);
+    }
+  }
+
+  return time;
 }
 
 console.log(solution_2(["A","A","A","B","B","B"], 2)); // 8
