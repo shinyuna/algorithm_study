@@ -95,3 +95,6 @@ console.log(
     ["ATL", "SFO"],
   ]),
 ); // ["ICN","ATL","ICN","SFO","ATL","SFO"]
+console.log(
+  solution_2([["ICN", "AAA"], ["ICN", "BBB"], ["BBB", "ICN"]]),
+); // ["ICN","BBB","ICN","AAA"]

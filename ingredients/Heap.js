@@ -37,6 +37,9 @@ class MinHeap {
   }
 
 
+  /**
+   * @description 루트 노드와 맨 뒤 노드를 교체한 후, 맨 뒤 노드를 제거한다. 그리고 루트 노드부터 자식 노드들과 비교하여 자리를 바꿔주는 작업을 반복한다.
+   */
   pop() {
     if (this.len === 0) {
       return null;
