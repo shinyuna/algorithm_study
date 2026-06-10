@@ -83,6 +83,40 @@ class Solution {
 
     return result;
   }
+
+  /**
+   * count 순 정렬 없이, bucket sort 사용해 등장 횟수 별로 숫자들을 저장하는 방식을 사용하면 시간 복잡도를 O(n log n) -> O(n)으로 개선 가능
+   * 공간 복잡도: O(n)
+   */
+  topKFrequent(nums, k) {
+    const result = [];
+
+    const bucket = [];
+    const numToCount = new Map();
+
+    for (const num of nums) {
+      const count = numToCount.get(num) ?? 0;
+      numToCount.set(num, count + 1);
+    }
+
+    for (const [num, count] of numToCount) {
+      if (!bucket[count]) {
+        bucket[count] = [];
+      }
+
+      bucket[count].push(num);
+    }
+
+    while (result.length < k) {
+      const top = bucket.pop();
+
+      if (top) {
+        top.forEach((num) => result.push(num));
+      }
+    }
+
+    return result;
+  }
 }
 
 const solution = new Solution();
@@ -95,3 +129,6 @@ console.log(solution.isAnagram("rat", "car")); // false
 
 console.log(solution.twoSum([2, 7, 11, 15], 9)); // [0, 1]
 console.log(solution.twoSum([3, 4, 5, 6], 7)); // [0, 1]
+
+console.log(solution.topKFrequent([1, 2, 2, 3, 3, 3], 2)); // [2, 3];
+console.log(solution.topKFrequent([4, 1, -1, 2, -1, 2, 3], 2)); // [2, -1];
