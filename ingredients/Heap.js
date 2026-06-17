@@ -1,14 +1,17 @@
-class MinHeap {
-  constructor() {
+class Heap {
+  constructor({
+    compare = (a, b) => a - b,
+  }) {
     this.heap = [null];
-  }
-
-  get root_index() {
-    return 1;
+    this.compare = compare;
   }
 
   get len() {
     return this.heap.length - 1;
+  }
+  
+  isEmpty() {
+    return this.heap.length === 1;
   }
 
   /**
@@ -16,83 +19,68 @@ class MinHeap {
    */
   push(value) {
     this.heap.push(value);
-    let current_index = this.heap.length - 1;
-
-    while (current_index > this.root_index) {
-      let target_index = current_index;
-      let parent_index = Math.floor(current_index / 2);
-
-      if (this.heap[target_index] < this.heap[parent_index]) {
-        [this.heap[target_index], this.heap[parent_index]] = [
-          this.heap[parent_index],
-          this.heap[target_index],
-        ];
-        current_index = parent_index;
-      } else {
-        break;
-      }
-    }
-
-    return this.heap;
+    this.bubbleUp();
   }
-
 
   /**
    * @description 루트 노드와 맨 뒤 노드를 교체한 후, 맨 뒤 노드를 제거한다. 그리고 루트 노드부터 자식 노드들과 비교하여 자리를 바꿔주는 작업을 반복한다.
    */
   pop() {
-    if (this.len === 0) {
-      return null;
-    }
+    if (this.heap.length === 1) return null;
+    if (this.heap.length === 2) return this.heap.pop();
 
-    if (this.len === 1) {
-      return this.heap.pop();
-    }
+    const root = this.heap[1];
+    this.heap[1] = this.heap.pop();
+    this.bubbleDown();
+    return root;
+  }
 
-    let current_index = this.root_index;
+  bubbleUp() {
+    let index = this.heap.length - 1;
 
-    [this.heap[current_index], this.heap[this.heap.length - 1]] = [
-      this.heap[this.heap.length - 1],
-      this.heap[current_index],
-    ];
+    while (index > 1) {
+      let parentIndex = Math.floor(index / 2);
 
-    const min_data = this.heap.pop();
-
-    while (current_index <= this.heap.length - 1) {
-      let left_child_index = current_index * 2;
-      let right_child_index = current_index * 2 + 1;
-
-      let min_index = current_index;
-
-      if (
-        left_child_index <= this.heap.length - 1 &&
-        this.heap[left_child_index] < this.heap[min_index]
-      ) {
-        min_index = left_child_index;
-      }
-
-      if (
-        right_child_index <= this.heap.length - 1 &&
-        this.heap[right_child_index] < this.heap[min_index]
-      ) {
-        min_index = right_child_index;
-      }
-
-      if (min_index === current_index) {
+      // 결과가 음수(< 0)라는 것은 index 위치의 원소가 부모보다 우선순위가 높다는 뜻입니다.
+      if (this.compare(this.heap[index], this.heap[parentIndex]) < 0) {
+        this.swap(index, parentIndex);
+        index = parentIndex;
+      } else {
         break;
       }
-
-      [this.heap[current_index], this.heap[min_index]] = [
-        this.heap[min_index],
-        this.heap[current_index],
-      ];
-      current_index = min_index;
     }
+  }
 
-    return min_data;
+  bubbleDown() {
+    let index = 1;
+    const length = this.heap.length;
+
+    while (index * 2 < length) {
+      let leftChild = index * 2;
+      let rightChild = index * 2 + 1;
+      let targetChild = leftChild;
+
+      // 오른쪽 자식이 있고, 오른쪽 자식이 왼쪽 자식보다 우선순위가 높다면 타겟 변경
+      if (
+        rightChild < length &&
+        this.compare(this.heap[rightChild], this.heap[leftChild]) < 0
+      ) {
+        targetChild = rightChild;
+      }
+
+      // 부모와 자식의 우선순위 비교
+      if (this.compare(this.heap[targetChild], this.heap[index]) < 0) {
+        this.swap(index, targetChild);
+        index = targetChild;
+      } else {
+        break;
+      }
+    }
+  }
+
+  swap(a, b) {
+    [this.heap[a], this.heap[b]] = [this.heap[b], this.heap[a]];
   }
 }
 
-export {
-  MinHeap,
-}
+export { Heap };

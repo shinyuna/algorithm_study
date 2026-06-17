@@ -7,10 +7,10 @@
  * 공간 복잡도 - O(N) : 힙에 최대 N개의 음식이 저장될 수 있음
  */
 
-import { MinHeap } from '../../ingredients/Heap.js';
+import { Heap } from '../../ingredients/Heap.js';
 
 function solution(scoville, K) {
-  const minHeap = new MinHeap();
+  const minHeap = new Heap();
 
   for (const scv of scoville) {
     minHeap.push(scv);
